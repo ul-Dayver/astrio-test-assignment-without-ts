@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-Vue.filter('formatDate', ({ currency, value }) => {
+Vue.filter('formatPrice', ({ currency, value }) => {
     if (typeof value !== "number") {
         return value;
     }

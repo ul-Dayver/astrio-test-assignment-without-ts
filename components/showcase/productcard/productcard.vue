@@ -15,7 +15,7 @@
             <v-card-title>
                 <div>
                     <div class="title">
-                        {{product.regular_price | formatDate}}
+                        {{product.regular_price | formatPrice}}
                     </div>
                     <span class="title blue--text">{{product.title}}</span>
                 </div>
@@ -24,7 +24,7 @@
                 {{brandTitle}}
             </v-card-subtitle>
             <v-card-actions>
-                <v-btn outlined color="blue">Buy</v-btn>
+                <v-btn outlined color="blue" @click="clickBuy">Buy</v-btn>
             </v-card-actions>
         </v-card>
     </v-col>
@@ -40,6 +40,13 @@ export default {
         brandTitle() {
             const brand = this.$store.state.brands.data.find((brand) => brand.id === this.product.brand);
             return brand ? brand.title : "";
+        }
+    },
+    methods: {
+        clickBuy() {
+            this.$store.commit("cart/addProduct", {
+                productId: this.product.id
+            })
         }
     }
 }

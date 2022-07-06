@@ -15,7 +15,8 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: 'stylesheet', href: "https://cdn.jsdelivr.net/npm/@mdi/font@6.x/css/materialdesignicons.min.css" }
     ]
   },
 
@@ -25,7 +26,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    {src: "~/plugins/filters/index.js"}
+    {src: "~/plugins/filters/index.js"},
+    {src: "~/plugins/cartinitload.js", mode: "client"}
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
