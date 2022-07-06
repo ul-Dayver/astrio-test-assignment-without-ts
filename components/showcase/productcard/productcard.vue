@@ -1,6 +1,7 @@
 <template>
     <v-col
         cols="12"
+        lg="2"
         md="4"
         sm="6"
         xs="12"
@@ -37,7 +38,7 @@ export default {
     },
     computed: {
         brandTitle() {
-            const brand = this.$store.state.showcase.brands.find((brand) => brand.id === this.product.brand);
+            const brand = this.$store.state.brands.data.find((brand) => brand.id === this.product.brand);
             return brand ? brand.title : "";
         }
     }

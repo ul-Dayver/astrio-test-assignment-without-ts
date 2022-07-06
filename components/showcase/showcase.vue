@@ -9,7 +9,7 @@ export default {
     name: "showcase",
     computed: {
         products() {
-            return this.$store.state.showcase.products;
+            return this.$store.state.products.data;
         }
     }
 };
