@@ -48,7 +48,7 @@ export const mutations = {
      * @param {Object<{productId: Number}>} payload 
      */
     addProduct(state, {productId}) {
-        const index = findIndexProduct(state, {productId});
+        const index = findIndexProduct(state, productId);
         const product = {productId, qty: 1};
         if (index >= 0) {
             product.qty += state.products[index].qty;
