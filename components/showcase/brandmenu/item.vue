@@ -11,7 +11,7 @@ export default {
     },
     methods: {
         selectItem() {
-            this.$emit('click', this.brand);
+            this.$store.commit("showcase/SET_ACTIVE_BRAND_BY_ID", this.brand.id);
         }
     }
 }

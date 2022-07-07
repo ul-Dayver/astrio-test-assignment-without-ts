@@ -1,7 +1,7 @@
 <template>
     <v-row>
         <v-col cols="12" md="2">
-            <ShowcaseBrandmenu @changebrand="changeActiveBrand"/>
+            <ShowcaseBrandmenu/>
         </v-col>
         <v-col cols="12" md="10" sm="12">
             <v-row>
@@ -14,22 +14,18 @@
 <script>
 export default {
     name: "showcase",
-    data() {
-        return { activeBrandId: null };
-    },
-    methods: {
-        changeActiveBrand(brandId) {
-            this.activeBrandId = brandId;
-        }
+    beforeMount() {
+        this.$store.commit("showcase/SET_PRODUCTS", this.$store.state.products.data);
+        this.$store.commit("showcase/SET_BRANDS", this.$store.state.brands.data);
     },
     computed: {
         products() {
-            let products = this.$store.state.products.data;
-            if (this.activeBrandId) {
-                products = products.filter(({brand}) => brand === this.activeBrandId);
-            }
+            let products = process.server 
+                ? this.$store.state.products.data
+                : this.$store.getters['showcase/showcaseProducts'];
+            
             return products;
         }
-    }
+    } 
 };
 </script>

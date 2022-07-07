@@ -9,24 +9,25 @@
             {{currentBrandTitle}}
         </v-btn>
         <div :class="`showcase-brandmenu-list${menuOpened ? ' showcase-brandmenu-list__show' : ''}`">
-            <ShowcaseBrandmenuList
-                :defaultLabel="defaultBrandLabel"
-                :currentBrandId="currentBrandId"
-                @selectbrand="setActiveBrand"
-            />
+            <v-list>
+                <v-list-item-group v-model="activeBrandIndex">
+                    <ShowcaseBrandmenuItem 
+                        v-for="brand in brands"
+                        :key="brand.id || 'all'"
+                        :brand="brand"
+                    />
+                </v-list-item-group>
+            </v-list>
         </div>
     </div>
 </template>
 <script>
-const ALL_BRANDS = "All brands";
 export default {
     name: "brandmenu",
     data() {
         return {
             menuOpened: false,
-            defaultBrandLabel: ALL_BRANDS,
-            currentBrandTitle: ALL_BRANDS,
-            currentBrandId: null,
+            activeBrandIndex: this.$store.state.showcase.activeBrandIndex
         }
     },
     mounted() {
@@ -41,7 +42,10 @@ export default {
     },
     computed: {
         brands() {
-            return this.$store.state.brands.data;
+            return this.$store.state.showcase.brands;
+        },
+        currentBrandTitle() {
+            return this.$store.getters['showcase/currentBrandTitle'];
         }
     },
     methods: {
@@ -51,17 +55,6 @@ export default {
         },
         closeMenu() {
             this.menuOpened = false;
-        },
-        setActiveBrand(brand) {
-            if (brand) {
-                this.currentBrandId = brand.id;
-                this.currentBrandTitle = brand.title;
-            } else {
-                this.currentBrandId = null;
-                this.currentBrandTitle = this.defaultBrandLabel;
-            }
-            this.$emit("changebrand", this.currentBrandId);
-            this.closeMenu();
         }
     }
 }
