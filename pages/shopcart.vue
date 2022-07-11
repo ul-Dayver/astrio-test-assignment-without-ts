@@ -5,8 +5,9 @@
             <v-col md="8" sm="12">
                 <ShopcartItem 
                     v-for="product in products"
-                    :key="product.productId"
+                    :key="product.variantId || product.productId"
                     :productId="product.productId"
+                    :variantId="product.variantId"
                     :qty="product.qty" 
                 />
             </v-col>

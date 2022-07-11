@@ -34,9 +34,9 @@ function done(state) {
  * @param {Number} productId
  * @returns {Number} index product; -1 if not founed
  */
-function findIndexProduct(state, productId ) {
+function findIndexProduct(state, productId, variantId ) {
     return state.products
-    .findIndex((product) => product.productId === productId);
+    .findIndex((product) => product.productId === productId && (!variantId || variantId === product.variantId ));
 };
 
 export const mutations = {
@@ -47,9 +47,9 @@ export const mutations = {
      * @param {Object<{products: Array, counter: Number}>} state 
      * @param {Object<{productId: Number}>} payload 
      */
-    addProduct(state, {productId}) {
-        const index = findIndexProduct(state, productId);
-        const product = {productId, qty: 1};
+    addProduct(state, {productId, variantId}) {
+        const index = findIndexProduct(state, productId, variantId);
+        const product = {productId, qty: 1, variantId};
         if (index >= 0) {
             product.qty += state.products[index].qty;
             state.products.splice(index, 1, product);
@@ -64,8 +64,8 @@ export const mutations = {
      * @param {Object<{products: Array, counter: Number}>} state 
      * @param {Object<{productId: Number}>} payload
      */
-    removeProduct(state, {productId}) {
-        const index = findIndexProduct(state, productId);
+    removeProduct(state, {productId, variantId}) {
+        const index = findIndexProduct(state, productId, variantId);
         if (index >= 0) {
             state.products.splice(index, 1);
             done(state);
@@ -87,11 +87,11 @@ export const mutations = {
      * @param {Object<{products: Array, counter: Number}>} state 
      * @param {Object<{productId: Number, qty: Number}>} payload
      */
-    setProductQty(state, { productId, qty }){
+    setProductQty(state, { productId, qty, variantId }){
         if (qty > 0) {
-            const index = findIndexProduct(state, productId);
+            const index = findIndexProduct(state, productId, variantId);
             if (index >= 0) {
-                state.products.splice(index, 1, {productId, qty});
+                state.products.splice(index, 1, {productId, qty, variantId});
                 done(state);
             }
         }

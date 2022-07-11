@@ -13,12 +13,13 @@
 export default {
     name: "shopcartqty",
     props: {
-        productId: { type: Number, required: true}
+        productId: { type: Number, required: true},
+        variantId: { type: Number}
     },
     computed: {
         qty() {
             const product = this.$store.state.cart.products.find(
-                ({productId}) => productId === this.productId
+                ({productId, variantId}) => productId === this.productId && (!this.variantId || variantId === this.variantId)
             );
             return product ? product.qty : 0;
         }
@@ -26,12 +27,14 @@ export default {
     methods: {
         clickPlus() {
             this.$store.commit("cart/addProduct", {
-                productId: this.productId
+                productId: this.productId,
+                variantId: this.variantId
             });
         },
         clickMinus(qty) {
             this.$store.commit("cart/setProductQty", {
                 productId: this.productId,
+                variantId: this.variantId,
                 qty: qty-1
             });
         }

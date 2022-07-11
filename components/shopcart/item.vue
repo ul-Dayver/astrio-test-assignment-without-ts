@@ -20,13 +20,20 @@
                 <v-card-subtitle>
                     {{product.brand.title}}
                 </v-card-subtitle>
+
+                <v-card-text v-if="product.variant">
+                    <div v-for="option in product.variant" :key="option.code">
+                        <b>{{option.label}}:</b>
+                        <span>{{option.value.label}}</span>
+                    </div>
+                </v-card-text>
             </v-col>
             <v-col md="3" sm="6" xs="12" class="d-sm-flex flex-column justify-center">
                 <div class="text-right mr-5 mb-4 shopcart-trash-btn">
                     <v-btn icon @click="removeProduct"><v-icon>mdi-trash-can</v-icon></v-btn>
                 </div>
 
-                <ShopcartQty :productId="productId" />
+                <ShopcartQty :productId="productId" :variantId="variantId" />
                 <div class="text-center mt-5">
                     <span>total:</span>
                     <span>{{product.total | formatPrice}}</span>
@@ -40,6 +47,7 @@ export default {
     name: "shopcartitem",
     props: {
         productId: {type: Number, required: true},
+        variantId: {type: Number},
         qty: {type: Number, required: true}
     },
     computed: {
@@ -53,11 +61,33 @@ export default {
             if (!brand) return null;
             
             const { value, currency } = product.regular_price;
-      
             const total = value * this.qty;
+            let variant = null;
+            let image = product.image;
+
+            if (this.variantId && product.variants && product.configurable_options) {
+                const _variant = product.variants.find(variant => variant.product.id === this.variantId);
+                if (_variant) {
+                    image = _variant.product.image;
+                    variant = product.configurable_options.map(option => {
+                        const attr = _variant.attributes.find(({code}) => code === option.attribute_code);
+                        if (attr) {
+                            const value = option.values.find(val => val.value_index === attr.value_index);
+                            return {
+                                code: option.attribute_code,
+                                label: option.label,
+                                value
+                            }
+                        }
+                        return null;
+                    })
+                }
+            }
             
             return {
                 ...product,
+                image,
+                variant,
                 qty: this.qty,
                 brand,
                 total: {currency, value: total}
@@ -67,7 +97,8 @@ export default {
     methods: {
         removeProduct() {
             this.$store.commit("cart/removeProduct", {
-                productId: this.productId
+                productId: this.productId,
+                variantId: this.variantId
             });
         }
     }
